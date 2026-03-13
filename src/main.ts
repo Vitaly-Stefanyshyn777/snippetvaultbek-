@@ -27,8 +27,12 @@ async function bootstrap() {
   );
 
   const port = process.env.PORT ?? 4000;
-  await app.listen(port);
+  // '0.0.0.0' потрібно для Railway/Docker — інакше не приймаються зовнішні запити
+  await app.listen(port, '0.0.0.0');
   Logger.log(`🚀 Snippet Vault API available at http://localhost:${port}/api`);
 }
 
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('❌ Startup failed:', err);
+  process.exit(1);
+});
