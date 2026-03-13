@@ -26,7 +26,16 @@ PORT=4000 pnpm run start:prod
 | Змінна | Опис |
 | --- | --- |
 | `PORT` | Порт для прослуховування (за замовчуванням 4000) |
-| `MONGO_URI` | URI MongoDB (використовується також для text-index). |
+| `MONGO_URI` | URI MongoDB (використовується також для text-index). **Обов'язково для Railway!** |
+| `CORS_ORIGIN` | Опційно: дозволені origins через кому, напр. `https://minisnippetvaultfront-epqy.vercel.app` |
+
+## Railway (502 / CORS)
+
+Якщо API повертає **502 Bad Gateway** і CORS-помилки:
+1. **MONGO_URI** — обов'язково встановіть в Railway → Variables. Формат: `mongodb+srv://user:pass@cluster.mongodb.net/dbname?retryWrites=true&w=majority`
+2. **MongoDB Atlas** — Network Access → Add IP → `0.0.0.0/0` (дозволити з будь-якого IP, потрібно для Railway)
+3. **Логи** — Railway → Deployments → View Logs. Шукайте `❌ Startup failed` або `MONGO_URI: ✗ NOT SET`
+4. **Health check** — `GET /api/health` або `GET /api` має повертати OK, якщо сервер запущений
 
 ## API приклади
 - **GET** `/api/snippets?page=1&limit=10&q=tailwind&tag=frontend` — список зі пошуком по `title`/`content`, фільтрація по тегу, пагінація.
