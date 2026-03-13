@@ -7,10 +7,11 @@ async function bootstrap() {
   app.enableCors({
     origin: (origin, cb) => {
       if (!origin) return cb(null, true); // same-origin
-      const allowed = process.env.CORS_ORIGIN?.split(',').map((o) => o.trim());
+      const allowed = process.env.CORS_ORIGIN?.split(',').map((o) => o.trim()).filter(Boolean);
       if (!allowed?.length) return cb(null, true); // dev: allow all
       if (allowed.includes(origin)) return cb(null, true);
-      if (/^https:\/\/[^.]+\.vercel\.app$/.test(origin)) return cb(null, true); // Vercel previews
+      // Vercel: *.vercel.app та піддомени (наприклад xxx-yyy.vercel.app)
+      if (/^https:\/\/[^.]+\.vercel\.app$/.test(origin)) return cb(null, true);
       if (/^https?:\/\/localhost(:\d+)?$/.test(origin)) return cb(null, true);
       cb(null, false);
     },
