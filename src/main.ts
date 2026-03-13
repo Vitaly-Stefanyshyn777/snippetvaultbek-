@@ -5,7 +5,8 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors(); // дозволити всі origins
-  app.setGlobalPrefix('api');
+  // exclude '/' — Railway health check перевіряє GET /, має отримати 200
+  app.setGlobalPrefix('api', { exclude: ['/'] });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

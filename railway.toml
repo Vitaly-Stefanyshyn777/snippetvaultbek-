@@ -5,3 +5,4 @@ buildCommand = "pnpm install && pnpm run build"
 
 [deploy]
 startCommand = "pnpm run start:prod"
+healthcheckPath = "/"
