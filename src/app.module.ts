@@ -16,6 +16,7 @@ import { SnippetsModule } from './snippets/snippets.module';
         uri:
           config.get<string>('MONGO_URI') ??
           'mongodb://localhost:27017/minisnippetvault',
+        lazyConnection: true, // не блокувати старт — Railway отримає відповідь одразу
       }),
     }),
     SnippetsModule,
