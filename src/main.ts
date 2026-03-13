@@ -4,18 +4,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors({
-    origin: (origin, cb) => {
-      if (!origin) return cb(null, true); // same-origin
-      const allowed = process.env.CORS_ORIGIN?.split(',').map((o) => o.trim()).filter(Boolean);
-      if (!allowed?.length) return cb(null, true); // dev: allow all
-      if (allowed.includes(origin)) return cb(null, true);
-      // Vercel: *.vercel.app та піддомени (наприклад xxx-yyy.vercel.app)
-      if (/^https:\/\/[^.]+\.vercel\.app$/.test(origin)) return cb(null, true);
-      if (/^https?:\/\/localhost(:\d+)?$/.test(origin)) return cb(null, true);
-      cb(null, false);
-    },
-  });
+  app.enableCors(); // дозволити всі origins
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
