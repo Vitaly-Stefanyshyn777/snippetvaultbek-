@@ -4,11 +4,16 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const corsOrigins = process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
-    : true; // allow all in dev
   app.enableCors({
-    origin: corsOrigins,
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true); // same-origin
+      const allowed = process.env.CORS_ORIGIN?.split(',').map((o) => o.trim());
+      if (!allowed?.length) return cb(null, true); // dev: allow all
+      if (allowed.includes(origin)) return cb(null, true);
+      if (/^https:\/\/[^.]+\.vercel\.app$/.test(origin)) return cb(null, true); // Vercel previews
+      if (/^https?:\/\/localhost(:\d+)?$/.test(origin)) return cb(null, true);
+      cb(null, false);
+    },
   });
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
